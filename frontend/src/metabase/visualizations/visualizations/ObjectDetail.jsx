@@ -28,6 +28,7 @@ import {
   followForeignKey,
   viewPreviousObjectDetail,
   viewNextObjectDetail,
+  closeObjectDetail,
 } from "metabase/query_builder/actions";
 import {
   getQuestion,
@@ -65,6 +66,7 @@ const mapDispatchToProps = dispatch => ({
   viewPreviousObjectDetail: (...args) =>
     dispatch(viewPreviousObjectDetail(...args)),
   viewNextObjectDetail: (...args) => dispatch(viewNextObjectDetail(...args)),
+  closeObjectDetail: (...args) => dispatch(closeObjectDetail(...args)),
 });
 
 export class ObjectDetail extends Component {
@@ -329,6 +331,9 @@ export class ObjectDetail extends Component {
     }
     if (event.key === "ArrowRight") {
       this.props.viewNextObjectDetail();
+    }
+    if (event.key === "Escape") {
+      this.props.closeObjectDetail();
     }
   };
 
