@@ -424,9 +424,10 @@ function formatDateTime(value, options) {
 
 export function formatDateTimeWithUnit(value, unit, options = {}) {
   if (unit === "day-of-week") {
-    return moment(value)
-      .utc()
-      .format("dddd");
+    const date = moment(value);
+    if (date.isValid()) {
+      return date.utc().format("dddd");
+    }
   }
 
   const m = parseTimestamp(value, unit, options.local);
