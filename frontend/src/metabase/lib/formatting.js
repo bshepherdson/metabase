@@ -423,7 +423,11 @@ function formatDateTime(value, options) {
 }
 
 export function formatDateTimeWithUnit(value, unit, options = {}) {
-  if (unit === "day-of-week") {
+  if (options.isExclude && unit === "hour-of-day") {
+    return moment(value)
+      .utc()
+      .format("h A");
+  } else if (options.isExclude && unit === "day-of-week") {
     const date = moment(value);
     if (date.isValid()) {
       return date.utc().format("dddd");
@@ -444,10 +448,6 @@ export function formatDateTimeWithUnit(value, unit, options = {}) {
       // tooltip show range like "January 1 - 7, 2017"
       return formatDateTimeRangeWithUnit(value, unit, options);
     }
-  } else if (unit === "hour-of-day") {
-    return moment(value)
-      .utc()
-      .format("h A");
   }
 
   options = {
