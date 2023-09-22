@@ -12,9 +12,8 @@
  {:app
   {:target     :npm-module
    :output-dir "frontend/src/cljs_release/"
-   :dev        {:output-dir "frontend/src/cljs/"
-                :compiler-options {:reader-features #{:cljs-dev}}
-                :devtools {:autoload false}}
+   :dev        {:output-dir "target/cljs/"
+                :compiler-options {:reader-features #{:cljs-dev}}}
    :compiler-options {:reader-features #{:cljs-release}}
    :entries    [metabase.domain-entities.queries.util
                 metabase.lib.column-group
@@ -31,6 +30,29 @@
                 metabase.shared.util.time
                 metabase.types
                 metabase.util.devtools]}
+
+  :dev
+  {:target           :browser
+   :output-dir       "target/cljs/"
+   :compiler-options {:reader-features #{:cljs-dev}}
+   :js-options       {:js-provider :external
+                      :external-index "frontend/src/cljs_bits.js"}
+   :modules
+   {:main {:entries [metabase.domain-entities.queries.util
+                     metabase.lib.column-group
+                     metabase.lib.js
+                     metabase.lib.limit
+                     metabase.lib.types.isa
+                     metabase.mbql.js
+                     metabase.shared.formatting.constants
+                     metabase.shared.formatting.date
+                     metabase.shared.formatting.numbers
+                     metabase.shared.formatting.time
+                     metabase.shared.parameters.parameters
+                     metabase.shared.util.currency
+                     metabase.shared.util.time
+                     metabase.types
+                     metabase.util.devtools]}}}
 
   :test
   {:target    :node-test

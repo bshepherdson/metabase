@@ -8,6 +8,7 @@
    :exclude
    [filter])
   (:require
+   [clojure.test :refer [deftest is testing]]
    [medley.core :as m]
    [metabase.lib.convert :as lib.convert]
    [metabase.lib.core :as lib.core]
@@ -883,7 +884,7 @@
 ;; - Even if it did work, I could find a way to tell webpack's HMR to allow a hot reload (ie. don't refresh the page)
 ;;   but to not also reload the files again a few seconds later.
 ;; If this were to be fixed, remove the `:devtools {:autoload false}` in the shadow-cljs build.
-(when js/module.hot
+#_(when js/module.hot
   ;; There are three moving parts to the hot reloading:
   ;; 1. When we're about the "dispose" this module, meaning some metabase.lib.* pieces are getting reloaded, set a
   ;;    marker on the `data` blob that will be passed from the dying version to the incoming version.
@@ -904,3 +905,16 @@
     (when (.-cljsReloaded data)
       (js/console.log "hot loading in - trigger React reload")
       (js/window.__MB_TRIGGER_RERENDER))))
+
+(comment
+  (+ 2 3)
+  (js/alert "foo")
+  (prn "things")
+  (js/console.log "things")
+  (defn foo [x]
+    (inc x))
+  (foo 5)
+
+  )
+(deftest some-test
+  (is (= 7 7)))

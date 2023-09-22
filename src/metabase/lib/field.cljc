@@ -222,9 +222,9 @@
                                   (let [table (lib.metadata/table-or-card query table-id)]
                                     (lib.metadata.calculation/display-name query stage-number table style))))
                               (or join-alias (lib.join.util/current-join-alias field-metadata))))
-        display-name       (if join-display-name
+        display-name       (str "!!" (if join-display-name
                              (str join-display-name " → " field-display-name)
-                             field-display-name)]
+                             field-display-name))]
     (cond
       temporal-unit (lib.util/format "%s: %s" display-name (-> (name temporal-unit)
                                                                (str/replace \- \space)

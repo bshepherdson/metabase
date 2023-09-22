@@ -22,7 +22,7 @@ const ENTERPRISE_SRC_PATH =
   __dirname + "/enterprise/frontend/src/metabase-enterprise";
 const TYPES_SRC_PATH = __dirname + "/frontend/src/metabase-types";
 const CLJS_SRC_PATH = __dirname + "/frontend/src/cljs_release";
-const CLJS_SRC_PATH_DEV = __dirname + "/frontend/src/cljs";
+const CLJS_SRC_PATH_DEV = __dirname + "/target/cljs";
 const TEST_SUPPORT_PATH = __dirname + "/frontend/test/__support__";
 const BUILD_PATH = __dirname + "/resources/frontend_client";
 const E2E_PATH = __dirname + "/e2e";
@@ -159,7 +159,7 @@ const config = (module.exports = {
       "metabase-enterprise": ENTERPRISE_SRC_PATH,
       "metabase-types": TYPES_SRC_PATH,
       "metabase-dev": `${SRC_PATH}/dev${devMode ? "" : "-noop"}.js`,
-      cljs: devMode ? CLJS_SRC_PATH_DEV : CLJS_SRC_PATH,
+      cljs: devMode ? null : CLJS_SRC_PATH,
       __support__: TEST_SUPPORT_PATH,
       e2e: E2E_PATH,
       style: SRC_PATH + "/css/core/index",
@@ -259,6 +259,28 @@ if (WEBPACK_BUNDLE === "hot") {
   // point the publicPath (inlined in index.html by HtmlWebpackPlugin) to the hot-reloading server
   config.output.publicPath =
     "http://localhost:8080/" + config.output.publicPath;
+
+  // Set up the ClojureScript output in `externals` as a bunch of global vars with a custom function.
+  const cljsRegexp = new RegExp("^cljs/");
+  config.externals = [
+    config.externals,
+    //{cljs_dev: ["http://localhost:3000/app/dist/main.js", "$CLJS"]},
+    function ({ context, request }, callback) {
+      // Otherwise, check for the cljs/ prefix.
+      if (cljsRegexp.test(request)) {
+        const cljsNamespace = request.substring(5);
+        //const external = "promise window.__CLJS_loading.then((_ignored) => " + cljsNamespace + ")";
+        const external = "var " + cljsNamespace;
+        return callback(null, external);
+      } else if (request === "cljs_dev/main") {
+        return callback(null, ["http://localhost:3000/app/dist/main.js", "metabase"], "script");
+      }
+      // Do not externalize; it's a regular import.
+      return callback();
+    },
+  ];
+  delete config.resolve.alias.cljs;
+  config.resolve.alias.cljs_dev = CLJS_SRC_PATH_DEV;
 
   config.module.rules.unshift({
     test: /\.(tsx?|jsx?)$/,
