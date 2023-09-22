@@ -8,7 +8,7 @@
    :exclude
    [filter])
   (:require
-   [clojure.test :refer [deftest is testing]]
+   #_[clojure.test :refer [deftest is testing]]
    [medley.core :as m]
    [metabase.lib.convert :as lib.convert]
    [metabase.lib.core :as lib.core]
@@ -914,7 +914,5 @@
   (defn foo [x]
     (inc x))
   (foo 5)
-
+  #_(require '[cljs.test :refer [deftest is testing]])
   )
-(deftest some-test
-  (is (= 7 7)))

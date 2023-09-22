@@ -108,7 +108,10 @@
                                    (snowplow/snowplow-url))
                                  ;; Webpack dev server
                                  (when config/is-dev?
-                                   "*:8080 ws://*:8080 ws://*:9630")]
+                                   "*:8080 ws://*:8080")
+                                 ;; Shadow-cljs dev server
+                                 (when config/is-dev?
+                                   "ws://*:9630")]
                   :manifest-src ["'self'"]}]
       (format "%s %s; " (name k) (str/join " " vs))))})
 
